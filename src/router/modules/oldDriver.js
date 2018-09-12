@@ -6,16 +6,14 @@ const oldDriverRouter = {
   // redirect: "noredirect",
   name: "olddriver",
   meta: {
-    title: "老司机带带我🚗🚗",
-    icon: "🚗",
-    need: true
+    // title: "老司机带带我🚗🚗",
   },
   children: [
     {
       path: "/olddriver/re",
       component: () => import("@/views/olddriver/index"),
       name: "re",
-      meta: { title: "dashboard" }
+      // meta: { title: "dashboard" }
     }
   ]
 };

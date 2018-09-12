@@ -3,6 +3,8 @@
 import Vue from "vue";
 import App from "./App";
 import router from "./router";
+import Mock from "mockjs";
+import axios from "axios";
 
 Vue.config.productionTip = false;
 
@@ -20,38 +22,65 @@ router.beforeEach((to, from, next) => {
   if (relUrl.indexOf("?") != -1) {
     relUrl = relUrl.split("?")[0];
   }
-  console.log(relUrl, JSON.parse(sessionStorage.tag).name);
+  let count = 0;
+  sessionStorage.tag
+    ? JSON.parse(sessionStorage.tag).map(ii => {
+        if (ii.name !== relUrl) {
+          count++;
+        }
+      })
+    : null;
   if (
-    sessionStorage.tag ? relUrl === JSON.parse(sessionStorage.tag).name : false
+    sessionStorage.tag ? count < JSON.parse(sessionStorage.tag).length : false
   ) {
     const tag = JSON.parse(sessionStorage.tag);
-    console.log(tag);
-    document.title = tag.title;
-    let link =
-      document.querySelector("link[rel*='icon']") ||
-      document.createElement("link");
-    link.type = tag.link.type;
-    link.rel = tag.link.rel;
-    link.href = tag.link.href;
-    let a = document.getElementsByTagName("head")[0].appendChild(link);
-    console.log("一样");
-    next();
+    tag.map(ii => {
+      if (ii.name === relUrl) {
+        document.title = ii.title;
+        let link =
+          document.querySelector("link[rel*='icon']") ||
+          document.createElement("link");
+        link.type = ii.link.type;
+        link.rel = ii.link.rel;
+        link.href = ii.link.href;
+        document.getElementsByTagName("head")[0].appendChild(link);
+        console.log("一样");
+        next();
+      }
+    });
   } else {
-    if (to.meta.title) {
-      document.title = to.meta.title;
-    }
-    let link =
-      document.querySelector("link[rel*='icon']") ||
-      document.createElement("link");
-    link.type = "image/x-icon";
-    link.rel = "shortcut icon";
-    link.href = "http://www.stackoverflow.com/favicon.ico";
-    document.getElementsByTagName("head")[0].appendChild(link);
-    let tag = {};
-    tag.link = { type: link.type, rel: link.rel, href: link.href };
-    tag.title = to.meta.title;
-    tag.name = relUrl;
-    sessionStorage.setItem("tag", JSON.stringify(tag));
+    Mock.mock(/\/test.com/, options => {
+      return Mock.mock({
+        icon: "http://www.stackoverflow.com/favicon.ico",
+        "title|5-10": "@cname"
+      });
+    });
+    axios
+      .get("http://test.com/", {
+        params: {
+          modulesName: relUrl
+        }
+      })
+      .then(function(response) {
+        let link =
+          document.querySelector("link[rel*='icon']") ||
+          document.createElement("link");
+        link.type = "image/x-icon";
+        link.rel = "shortcut icon";
+        link.href = response.data.icon;
+        document.getElementsByTagName("head")[0].appendChild(link);
+        document.title = to.meta.title ? to.meta.title : response.data.title;
+        let tag = sessionStorage.tag ? JSON.parse(sessionStorage.tag) : [];
+        let tagItem = {};
+        tagItem.link = { type: link.type, rel: link.rel, href: link.href };
+        tagItem.title = document.title;
+        tagItem.name = relUrl;
+        tag.push(tagItem);
+        sessionStorage.setItem("tag", JSON.stringify(tag));
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
     console.log("不一样");
     next();
   }
