@@ -1,8 +1,25 @@
 <template>
   <span class="inputComponents" >
-    <input :class="inputStyle" :placeholder="placeholder" :style="iStyle" @blur="focusState = false" v-focus="focusState" />
+    <input
+      :class="inputStyle"
+      ref="input"
+      :placeholder="placeholder"
+      :value="value"
+      :style="iStyle"
+      :disabled="inputEdit==='disabled'"
+      :readonly="inputEdit==='readonly'"
+      @change="getValue"
+      @blur="focusState = false"
+      v-focus="focusState"
+    />
     <span>
-    <button :v-if="showButton" :class="buttonStyle" @mousedown="mousedownButton" @mouseup="mouseupButton" >
+    <button
+      v-if="showButton"
+      :class="buttonStyle"
+      @mousedown="mousedownButton"
+      @mouseup="mouseupButton"
+      @click="onClickButton"
+    >
       {{buttonText}}
     </button>
     </span>
@@ -17,13 +34,17 @@ export default {
     buttonText:"",
     iStyle:Object,
     placeholder:"",
+    onClick:Function,
+    defaultValue:"",
+    inputEdit:"edit",
   },
   data () {
     return {
-      showButton: this.type==="searchInput",
+      showButton: this.type==="searchInput"?true:false,
       buttonStyle:"button",
       inputStyle: "normalInput",
       focusState: false,
+      value:this.defaultValue,
     }
   },
   directives: {
@@ -36,6 +57,12 @@ export default {
     }
   },
   methods: {
+    onClickButton () {
+      this.onClick(this);
+    },
+    getValue(value){
+      this.value = value.target.value;
+    },
     mousedownButton () {
       this.inputStyle = "mousedownInput";
       this.buttonStyle="mousedownButton";

@@ -1,15 +1,18 @@
 <template>
   <div>
     <div class="searchBar" >
-      <Input buttonText="嘀嘀嘀，开车啦" :iStyle="inputStyle" placeholder="震惊！小叉居然是变态" type="searchInput" />
+      <Input buttonText="嘀嘀嘀，开车啦" :iStyle="inputStyle" placeholder="震惊！小叉居然是变态" type="searchInput" :onClick="searchData" />
     </div>
-    <Table :columns="columns" :iStyle="tableStyle" :dataSource = "dataSource" />
+    <Table :columns="columns" :iStyle="tableStyle" :dataSource = "dataSource" >
+      <Input slot-scope="copy" buttonText="复制" type="searchInput" :defaultValue="copy.data" :onClick="copyUrl" />
+    </Table>
   </div>
 </template>
 
 <script>
 import Input from "@/components/global/input";
 import Table from "@/components/global/table";
+import axios from "axios";
 export default {
     name: "Header",
     components: {
@@ -18,46 +21,52 @@ export default {
     },
     data() {
         return {
+          defaultValue:"",
           inputStyle:{
             marginBottom:"50px",
           },
           tableStyle:{
-            width:"1000px",
-            marginLeft: "calc(50% - 500px)",
+            width:"80%",
+            marginLeft: "10%",
           },
           columns:[{
-            title: 'Name',
+            title: '种子名称',
             dataIndex: 'name',
             key: 'name',
           }, {
-            title: 'Age',
-            dataIndex: 'age',
-            key: 'age',
+            title: '上架日期',
+            dataIndex: 'date',
+            key: 'date',
           }, {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'address',
+            title: '链接地址',
+            dataIndex: 'magnet',
+            key: 'magnet',
+            name:"one",
           }],
-          dataSource:[{
-            key: '1',
-            name: 'John Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
-            tags: ['nice', 'developer'],
-          }, {
-            key: '2',
-            name: 'Jim Green',
-            age: 42,
-            address: 'London No. 1 Lake Park',
-            tags: ['loser'],
-          }, {
-            key: '3',
-            name: 'Joe Black',
-            age: 32,
-            address: 'Sidney No. 1 Lake Park',
-            tags: ['cool', 'teacher'],
-          }],
+          dataSource:[],
         };
+    },
+    methods:{
+      copyUrl(that){
+        that.$refs.input.select();
+        document.execCommand("Copy");;
+      },
+      searchData(that){
+        let these = this;
+        axios.post(`/olddriver/torrent_list`, {
+            keyword: that.value,
+        })
+        .then(function (response) {
+          let value = response.data;
+          value.map(ii=>{
+            ii.key = ii.id;
+          });
+          these.dataSource=value;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      },
     }
 };
 </script>
