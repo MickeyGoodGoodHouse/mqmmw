@@ -7,5 +7,5 @@ Vue.use(Router);
 import componentsRouter from "./modules/oldDriver";
 
 export default new Router({
-  routes: [componentsRouter]
+  routes: [{ path: "/", redirect: "/olddriver" }, componentsRouter]
 });

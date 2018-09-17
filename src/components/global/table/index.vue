@@ -1,5 +1,5 @@
 <template>
-  <span class="tableComponents" >
+  <div class="tableComponents" >
     <table class="normalTable" :style="iStyle" >
       <tr>
         <th v-for="item in columns" :key="item.key" >{{item.title}}</th>
@@ -11,7 +11,7 @@
         </td>
       </tr>
     </table>
-  </span>
+  </div>
 </template>
 
 <script>
@@ -78,7 +78,7 @@ $ThColor: rgb(250, 250, 250);
     th,
     td {
         padding: 16px;
-        max-width:300px;
+        max-width: 300px;
         overflow: hidden;
         border-bottom: 1px solid $colorGary;
     }

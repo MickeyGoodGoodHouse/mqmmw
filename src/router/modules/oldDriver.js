@@ -6,7 +6,7 @@ const oldDriverRouter = {
   // redirect: "noredirect",
   name: "olddriver",
   meta: {
-    // title: "老司机带带我🚗🚗",
+    title: "老司机带带我🚗🚗",
   },
   children: [
     {

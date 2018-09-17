@@ -11,6 +11,7 @@
       @change="getValue"
       @blur="focusState = false"
       v-focus="focusState"
+      @keyup.enter="onClickButton"
     />
     <span>
     <button
