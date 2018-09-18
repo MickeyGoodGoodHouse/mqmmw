@@ -1,17 +1,17 @@
 <template>
   <div class="bannerComponents" >
-    <div :class="scrolled ? 'bannerComponentsFlip' : ''" >
+    <div :class="typeof(scrolled)==='boolean' ? (scrolled? 'bannerComponentsFlip' : 'bannerComponentsFlipBack'):''" >
       <div>
-      <img src="@/assets/favicon.png" alt="LOGO" class="logo">
-      <span class="webName" >Mickey Fantasy House</span>
-      <span class ="bannerSearchBar">
-        <img src="@/assets/search.png" alt="search" class="searchIcon" >
-        <input class="bannerInput" :placeholder="placeholder" />
-      </span>
+        <img src="@/assets/favicon.png" alt="LOGO" class="logo">
+        <span class="webName" >Mickey Fantasy House</span>
+        <span class ="bannerSearchBar">
+            <img src="@/assets/search.png" alt="search" class="searchIcon" >
+            <input class="bannerInput" :placeholder="placeholder" />
+        </span>
       </div>
       <div class = "underBanner" >
-      <img src="@/assets/favicon.png" alt="LOGO" class="logo">
-      <span class="webName" >Mickey Fantasy House</span>
+        <img src="@/assets/favicon.png" alt="LOGO" class="logo">
+        <span class="webName" >Mickey Fantasy House</span>
       <!-- <span class ="bannerSearchBar">
         <img src="@/assets/search.png" alt="search" class="searchIcon" >
         <input class="bannerInput" :placeholder="placeholder" />
@@ -44,7 +44,7 @@ export default {
 
 <style lang="scss">
 .underBanner {
-    transform: rotateX(45deg);
+    transform: rotateX(-90deg) translateZ(-25px);
 }
 .bannerComponents {
     background-color: white;
@@ -65,8 +65,14 @@ export default {
     }
 }
 .bannerComponentsFlip {
-    animation: Flip 3s 1;
+    animation: Flip 1s 1;
     animation-fill-mode: forwards;
+    transform-style: preserve-3d;            // 使子元素保留其3D视角
+}
+.bannerComponentsFlipBack {
+    animation: FlipBack 1s 1;
+    animation-fill-mode: forwards;
+    transform-style: preserve-3d;            // 使子元素保留其3D视角
 }
 .logo {
     height: 50px;
@@ -103,10 +109,24 @@ export default {
 }
 @keyframes Flip {
     from {
-        transform: rotateX(0deg);
+        transform-origin: 25px 25px;
+        transform:rotateX(0deg);
     }
     to {
-        transform: rotateX(-90deg);
+        transform-origin: 25px 25px;
+        // transform-origin : 00% 0% 50%;
+        transform:rotateX(90deg);
+    }
+}
+@keyframes FlipBack {
+    from {
+        transform-origin: 25px 25px;
+        transform:rotateX(90deg);
+    }
+    to {
+        transform-origin: 25px 25px;
+        // transform-origin : 00% 0% 50%;
+        transform:rotateX(0deg);
     }
 }
 </style>

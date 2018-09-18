@@ -54,7 +54,7 @@ export default {
           loading:false,
           placeholder:"震惊！小叉居然是变态",
           noDataText:"",
-          scrolled:false,
+          scrolled:null,
           scrollBefore:0,
         };
     },
