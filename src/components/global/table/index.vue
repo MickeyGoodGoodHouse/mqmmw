@@ -10,6 +10,11 @@
           {{typeof(columnsItem)!=='object'?columnsItem:null}}
         </td>
       </tr>
+      <tr v-if="dataSource.length===0" >
+        <td :colspan="columns.length">
+          {{noDataText}}
+        </td>
+      </tr>
     </table>
   </div>
 </template>
@@ -30,6 +35,7 @@ export default {
     dataSource:Array,
     loading:false,
     iStyle:Object,
+    noDataText:String,
   },
   watch:{
     dataSource:function(){
@@ -81,6 +87,12 @@ $ThColor: rgb(250, 250, 250);
         max-width: 300px;
         overflow: hidden;
         border-bottom: 1px solid $colorGary;
+        @media screen and (max-width: 744px) {
+            max-width: 150px;
+            @media screen and (max-width: 400px) {
+                max-width: 90px;
+            }
+        }
     }
     th {
         background-color: $ThColor;

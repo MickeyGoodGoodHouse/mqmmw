@@ -38,11 +38,12 @@ export default {
     onClick:Function,
     defaultValue:"",
     inputEdit:"edit",
+    buttonType:String,
   },
   data () {
     return {
       showButton: this.type==="searchInput"?true:false,
-      buttonStyle:"button",
+      buttonStyle:this.buttonType&&this.buttonType==="primary"?"primary":"default",
       inputStyle: "normalInput",
       focusState: false,
       value:this.defaultValue,
@@ -66,12 +67,20 @@ export default {
     },
     mousedownButton () {
       this.inputStyle = "mousedownInput";
-      this.buttonStyle="mousedownButton";
+      if(this.buttonType&&this.buttonType==="primary"){
+        this.buttonStyle="primary primaryMousedown";
+      }else{
+        this.buttonStyle="default defaultMousedown";
+      }
     },
     mouseupButton () {
       this.focusState = true;
       this.inputStyle = "mouseupInput";
-      this.buttonStyle="mouseupButton";
+      if(this.buttonType&&this.buttonType==="primary"){
+        this.buttonStyle="primary primaryMouseup";
+      }else{
+        this.buttonStyle="default defaultMouseup";
+      }
     },
     // inputFocus () {
     //    this.buttonStyle="buttonFocus";
@@ -115,9 +124,7 @@ $buttonShadowColor: rgba(51, 133, 255, 0.3);
     font-size: 17px;
     padding: 0 15px;
     height: 40px;
-    background-color: $colorBlue;
     border-radius: 0px 5px 5px 0px;
-    color: $colorWite;
     position: absolute;
     top: 0px;
     right: 0px;
@@ -142,17 +149,30 @@ $buttonShadowColor: rgba(51, 133, 255, 0.3);
     animation-fill-mode: forwards;
     border: 1px $colorBlue solid;
 }
-.button {
+.primary {
     @include buttonBase;
+    background-color: $colorBlue;
+    color: $colorWite;
 }
-.mousedownButton {
+.default {
     @include buttonBase;
-    animation: mousedownButton 0.3s 1;
+    background-color: $colorWite;
+    color: $colorBlue;
+    border: 1px $colorBlue solid;
+}
+.primaryMousedown {
+    animation: primaryMousedown 0.3s 1;
     animation-fill-mode: forwards;
 }
-.mouseupButton {
-    @include buttonBase;
-    animation: mouseupButton 0.3s 1;
+.defaultMousedown {
+    animation: defaultMousedown 0.3s 1;
+    animation-fill-mode: forwards;
+}
+.defaultMouseup {
+    animation: defaultMouseup 0.3s 1;
+}
+.primaryMouseup {
+    animation: primaryMouseup 0.3s 1;
 }
 @keyframes mousedownInputShadow {
     from {
@@ -170,7 +190,28 @@ $buttonShadowColor: rgba(51, 133, 255, 0.3);
         box-shadow: 0 0 5px $colorBlue;
     }
 }
-@keyframes mousedownButton {
+@keyframes defaultMousedown {
+    from {
+        background-color: $colorWite;
+        color: $colorBlue;
+    }
+    to {
+        background-color: $colorBlue;
+        color: $colorWite;
+    }
+}
+@keyframes defaultMouseup {
+    from {
+        background-color: $colorBlue;
+        color: $colorWite;
+    }
+    to {
+        background-color: $colorWite;
+        color: $colorBlue;
+        box-shadow: 0 0 0 5px $buttonShadowColor;
+    }
+}
+@keyframes primaryMousedown {
     from {
         background-color: $colorBlue;
     }
@@ -178,7 +219,7 @@ $buttonShadowColor: rgba(51, 133, 255, 0.3);
         background-color: $colorDeepBlue;
     }
 }
-@keyframes mouseupButton {
+@keyframes primaryMouseup {
     from {
         background-color: $colorDeepBlue;
     }
