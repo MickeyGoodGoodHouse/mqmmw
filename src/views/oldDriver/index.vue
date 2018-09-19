@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Banner :scrolled ="scrolled" />
+    <Banner :scrolled ="scrolled" modulesName="Old Driver" modulesIcon="static/oldDriver.png" :titleText="keyWord" />
     <div class="searchBar" >
       <Input buttonText="嘀嘀嘀，开车啦" buttonType="primary" :iStyle="inputStyle" :placeholder="placeholder" type="searchInput" :onClick="searchData" />
     </div>
@@ -56,6 +56,7 @@ export default {
           noDataText:"",
           scrolled:null,
           scrollBefore:0,
+          keyWord:"",
         };
     },
     created:function(){
@@ -105,6 +106,7 @@ export default {
                 keyword: that.value,
             })
             .then(function (response) {
+              these.keyWord = that.value;
               let value = response.data?response.data:response.result;
               Array.isArray(value)?value.map(ii=>{
                 ii.key = ii.id;
